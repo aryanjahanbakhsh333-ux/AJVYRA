@@ -1,0 +1,9 @@
+[
+    {
+        "id": "game-01",
+        "title": "Black Run",
+        "genre": "Arcade",
+        "status": "playable",
+        "url": "games/game-01/index.html"
+    }
+]

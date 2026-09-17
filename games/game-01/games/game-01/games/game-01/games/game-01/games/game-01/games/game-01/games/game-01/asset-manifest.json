@@ -1,0 +1,38 @@
+{
+    "game": "black-run",
+
+    "images": [
+        {
+            "key": "player",
+            "file": "assets/player.png"
+        },
+        {
+            "key": "enemy",
+            "file": "assets/enemy.png"
+        },
+        {
+            "key": "world",
+            "file": "assets/world.png"
+        }
+    ],
+
+    "spritesheets": [
+        {
+            "key": "player-run",
+            "file": "assets/player-run.png",
+            "frameWidth": 64,
+            "frameHeight": 64
+        }
+    ],
+
+    "audio": [
+        {
+            "key": "coin",
+            "file": "assets/coin.mp3"
+        },
+        {
+            "key": "hit",
+            "file": "assets/hit.mp3"
+        }
+    ]
+}

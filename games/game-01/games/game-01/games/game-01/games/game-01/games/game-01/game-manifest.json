@@ -1,0 +1,28 @@
+{
+    "id": "game-01",
+    "title": "Black Run",
+    "brand": "AJVYRA",
+    "version": "0.1.0",
+    "genre": "Arcade Platformer",
+    "platforms": [
+        "web",
+        "mobile"
+    ],
+    "features": [
+        "movement",
+        "jump",
+        "enemies",
+        "collectibles",
+        "score",
+        "lives",
+        "timer",
+        "pause",
+        "restart",
+        "save"
+    ],
+    "assets": {
+        "player": false,
+        "audio": false,
+        "sprites": false
+    }
+}

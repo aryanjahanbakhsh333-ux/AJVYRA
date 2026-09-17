@@ -1,0 +1,20 @@
+{
+    "name": "AJVYRA Black Run",
+
+    "version": "0.2.0",
+
+    "build": "prototype-05",
+
+    "status": "development",
+
+    "brand": "AJVYRA",
+
+    "gameplay": {
+        "playable": true,
+        "mobile": true,
+        "levels": 2,
+        "checkpointSystem": true,
+        "cameraSystem": true,
+        "saveSystem": true
+    }
+}

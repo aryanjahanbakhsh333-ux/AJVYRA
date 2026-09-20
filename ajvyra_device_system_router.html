@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>AJVYRA — Device System Router</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#070910;color:#f4f6fb;font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{display:flex;align-items:center;justify-content:center;padding:24px}.card{width:min(760px,100%);background:#101421;border:1px solid #293147;border-radius:22px;padding:28px;box-shadow:0 20px 70px #0008}.logo{font-size:28px;font-weight:900;letter-spacing:.08em}.muted{color:#9ca6ba}.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.pill{padding:10px 13px;border:1px solid #303a53;border-radius:13px;background:#151b2a}.ok{color:#9fd7ff}.btn{border:0;border-radius:13px;padding:13px 18px;background:#7aa9ff;color:#07101d;font-weight:800;cursor:pointer}.hidden{display:none!important}#mobileControls{margin-top:20px;min-height:180px;position:relative;border:1px dashed #35405a;border-radius:18px}#joy{position:absolute;left:18px;bottom:18px;width:125px;height:125px;border-radius:50%;background:#ffffff10;border:2px solid #53607b;touch-action:none}.knob{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px;border-radius:50%;background:#ffffff35;border:1px solid #ffffff66}.actions{position:absolute;right:18px;bottom:18px;display:flex;gap:10px}.actions button{width:68px;height:68px;border-radius:50%;border:1px solid #596783;background:#171d2dcc;color:white;font-weight:800}.desktop{padding:22px;border:1px dashed #35405a;border-radius:18px;margin-top:20px;line-height:1.7}
+</style>
+</head>
+<body>
+<main class="card">
+<div class="logo">AJVYRA</div>
+<h1>Device & Control Router</h1>
+<p class="muted">This file detects whether AJVYRA is being opened on a phone/tablet or a computer and selects the matching control system.</p>
+<div class="row"><div class="pill">Device: <strong id="device">Detecting…</strong></div><div class="pill">Touch: <strong id="touch">Detecting…</strong></div><div class="pill">Controls: <strong id="mode">Detecting…</strong></div></div>
+<section id="mobileControls" class="hidden">
+<h2 style="padding:0 18px">📱 Mobile controls</h2><div id="joy"><div class="knob" id="knob"></div></div><div class="actions"><button data-action="attack">ATTACK</button><button data-action="dash">DASH</button><button data-action="action">ACTION</button><button data-action="pause">Ⅱ</button></div>
+</section>
+<section id="desktopControls" class="desktop hidden"><h2>🖥️ Computer controls</h2>WASD / Arrow keys = move<br>Mouse = aim / shoot where the selected game supports it<br>SHIFT = dash • SPACE = action • P = pause • R = restart • ESC = back</section>
+<div class="row"><button class="btn" id="openGame">OPEN GAME</button></div>
+<p class="muted" style="font-size:13px;margin-top:18px">Integration note: the selected game's browser version must be connected to this router. The older Python/Pygame files do not run directly inside an iPhone/Android browser.</p>
+</main>
+<script>
+const ua=navigator.userAgent.toLowerCase();
+const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+const isMobile=/android|iphone|ipad|ipod|mobile|tablet/.test(ua);
+const mobile=isMobile||isTouch;
+document.getElementById('device').textContent=mobile?'Mobile / Tablet':'Computer';
+document.getElementById('touch').textContent=isTouch?'Available':'Not detected';
+document.getElementById('mode').textContent=mobile?'Touch controls':'Keyboard + mouse';
+document.getElementById('mobileControls').classList.toggle('hidden',!mobile);
+document.getElementById('desktopControls').classList.toggle('hidden',mobile);
+
+// Generic input bridge: browser games can listen for these custom events.
+function emit(name,detail={}){window.dispatchEvent(new CustomEvent('ajvyra-input',{detail:{action:name,...detail}}));}
+for(const b of document.querySelectorAll('[data-action]')) b.addEventListener('pointerdown',e=>{e.preventDefault();emit(b.dataset.action,{pressed:true})});
+const joy=document.getElementById('joy'),knob=document.getElementById('knob');let active=false;
+function moveJoy(e){const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy,m=Math.min(42,Math.hypot(dx,dy));if(m){const a=Math.atan2(dy,dx);dx=Math.cos(a)*m;dy=Math.sin(a)*m}knob.style.transform=`translate(${dx}px,${dy}px)`;emit('move',{x:dx/42,y:dy/42})}
+joy.addEventListener('pointerdown',e=>{active=true;joy.setPointerCapture(e.pointerId);moveJoy(e)});joy.addEventListener('pointermove',e=>{if(active)moveJoy(e)});joy.addEventListener('pointerup',()=>{active=false;knob.style.transform='translate(0,0)';emit('move',{x:0,y:0})});
+addEventListener('keydown',e=>emit('key',{key:e.key,down:true}));addEventListener('keyup',e=>emit('key',{key:e.key,down:false}));
+document.getElementById('openGame').onclick=()=>{const game=new URLSearchParams(location.search).get('game');if(game){location.href=game}else{alert('Connect this router to a browser-playable AJVYRA game using ?game=GAME_FILE.html')}};
+</script>
+</body>
+</html>

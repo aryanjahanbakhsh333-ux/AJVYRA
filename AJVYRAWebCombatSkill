@@ -1,0 +1,139 @@
+class AJVYRAWebCombatSkill {
+    constructor(data = {}) {
+        this.id = String(data.id || "");
+        this.name = String(data.name || "Skill");
+        this.type = String(data.type || "attack");
+
+        this.power = Math.max(
+            0,
+            Number(data.power) || 0
+        );
+
+        this.range = Math.max(
+            0,
+            Number(data.range) || 1
+        );
+
+        this.cooldown = Math.max(
+            0,
+            Number(data.cooldown) || 1000
+        );
+
+        this.cost = Math.max(
+            0,
+            Number(data.cost) || 0
+        );
+
+        this.resource = String(
+            data.resource || "mana"
+        );
+
+        this.duration = Math.max(
+            0,
+            Number(data.duration) || 0
+        );
+
+        this.metadata = data.metadata || {};
+    }
+}
+
+class AJVYRAWebCombatSkillSystem {
+    constructor() {
+        this.skills = new Map();
+        this.cooldowns = new Map();
+    }
+
+    registerSkill(data) {
+        const skill =
+            data instanceof AJVYRAWebCombatSkill
+                ? data
+                : new AJVYRAWebCombatSkill(data);
+
+        if (!skill.id) {
+            return null;
+        }
+
+        this.skills.set(skill.id, skill);
+        return skill;
+    }
+
+    getSkill(id) {
+        return this.skills.get(String(id)) || null;
+    }
+
+    canUse(entity, skillId, now = Date.now()) {
+        const skill = this.getSkill(skillId);
+
+        if (!skill) {
+            return {
+                allowed: false,
+                reason: "skill_not_found"
+            };
+        }
+
+        const key =
+            `${String(entity.id)}:${skill.id}`;
+
+        const readyAt =
+            Number(this.cooldowns.get(key)) || 0;
+
+        if (now < readyAt) {
+            return {
+                allowed: false,
+                reason: "cooldown"
+            };
+        }
+
+        const resourceValue =
+            Number(entity?.[skill.resource]) ||
+            Number(entity?.stats?.[skill.resource]) ||
+            0;
+
+        if (resourceValue < skill.cost) {
+            return {
+                allowed: false,
+                reason: "insufficient_resource"
+            };
+        }
+
+        return {
+            allowed: true,
+            skill
+        };
+    }
+
+    use(entity, skillId, now = Date.now()) {
+        const result =
+            this.canUse(entity, skillId, now);
+
+        if (!result.allowed) {
+            return result;
+        }
+
+        const skill = result.skill;
+
+        const key =
+            `${String(entity.id)}:${skill.id}`;
+
+        this.cooldowns.set(
+            key,
+            now + skill.cooldown
+        );
+
+        if (skill.cost > 0) {
+            if (typeof entity[skill.resource] === "number") {
+                entity[skill.resource] -= skill.cost;
+            } else if (
+                entity.stats &&
+                typeof entity.stats[skill.resource] === "number"
+            ) {
+                entity.stats[skill.resource] -= skill.cost;
+            }
+        }
+
+        return {
+            allowed: true,
+            skill
+        };
+    }
+}

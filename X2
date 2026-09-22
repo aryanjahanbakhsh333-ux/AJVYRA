@@ -1,0 +1,14 @@
+from ajvyra_anime_tts_engine import speak_both_languages
+
+result = speak_both_languages(
+    anime_id=1,
+    character_id="A01-C01",
+    text_fa="من این صدا رو قبلاً شنیدم...",
+    text_ja="この声、前にも聞いたことがある…",
+    scene_number=1,
+    dialogue_id="A01-S01-D01",
+    emotion="fear",
+)
+
+print(result["fa"].audio_path)
+print(result["ja"].audio_path)

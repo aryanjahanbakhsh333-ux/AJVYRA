@@ -1,0 +1,81 @@
+.ajvyra-cinematic-library {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(220px, 1fr)
+    );
+    gap: 20px;
+}
+
+.ajvyra-cinematic-card {
+    overflow: hidden;
+    border-radius: 16px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #292929;
+}
+
+.ajvyra-cinematic-poster {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    background: #1b1b1b;
+}
+
+.ajvyra-cinematic-card-body {
+    padding: 14px;
+}
+
+.ajvyra-cinematic-card-body h3 {
+    margin: 0 0 7px;
+    font-size: 18px;
+}
+
+.ajvyra-cinematic-card-body span {
+    display: block;
+    margin-bottom: 12px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.ajvyra-cinematic-card-body button {
+    min-height: 44px;
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.ajvyra-cinematic-player {
+    width: 100%;
+    max-width: 1100px;
+    display: block;
+    background: #000;
+    border-radius: 16px;
+}
+
+.ajvyra-cinematic-empty {
+    padding: 30px;
+    text-align: center;
+    color: #aaa;
+}
+
+@media (max-width: 600px) {
+    .ajvyra-cinematic-library {
+        grid-template-columns: repeat(
+            2,
+            minmax(0, 1fr)
+        );
+        gap: 12px;
+    }
+
+    .ajvyra-cinematic-card-body {
+        padding: 10px;
+    }
+
+    .ajvyra-cinematic-card-body h3 {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,13 @@
+from ajvyra_anime_tts_engine import speak
+
+result = speak(
+    anime_id=1,
+    character_id="A01-C01",
+    language="fa",
+    text="من این صدا رو قبلاً شنیدم...",
+    scene_number=1,
+    dialogue_id="A01-S01-D01",
+    emotion="fear",
+)
+
+print(result.audio_path)

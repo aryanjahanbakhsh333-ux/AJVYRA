@@ -1,0 +1,146 @@
+name: AJVYRA Final Pages Release
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ajvyra-pages-release
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate AJVYRA Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Verify entry file
+        shell: bash
+        run: |
+          set -e
+
+          if [ ! -f "index.html" ]; then
+            echo "ERROR: index.html is missing."
+            exit 1
+          fi
+
+      - name: Verify release manifest
+        shell: bash
+        run: |
+          set -e
+
+          MANIFEST="assets/releases/ajvyra-final-release-manifest.json"
+
+          if [ ! -f "$MANIFEST" ]; then
+            echo "ERROR: Final release manifest is missing."
+            echo "AJVYRA release is blocked."
+            exit 1
+          fi
+
+      - name: Validate 30-film manifest
+        shell: bash
+        run: |
+          set -e
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          manifest_path = Path(
+              "assets/releases/ajvyra-final-release-manifest.json"
+          )
+
+          data = json.loads(
+              manifest_path.read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          anime = data.get("anime")
+
+          if not isinstance(anime, list):
+              raise SystemExit(
+                  "ERROR: manifest.anime must be a list."
+              )
+
+          if len(anime) != 30:
+              raise SystemExit(
+                  f"ERROR: expected 30 anime releases, found {len(anime)}."
+              )
+
+          for index, release in enumerate(anime, 1):
+              title = release.get("title")
+              video = (
+                  release.get("video")
+                  or release.get("videoUrl")
+                  or release.get("mediaUrl")
+              )
+
+              ready = release.get("ready") is True
+              published = release.get("published") is True
+
+              if not title:
+                  raise SystemExit(
+                      f"ERROR: anime #{index} has no title."
+                  )
+
+              if not ready:
+                  raise SystemExit(
+                      f"ERROR: {title} is not READY."
+                  )
+
+              if not published:
+                  raise SystemExit(
+                      f"ERROR: {title} is not PUBLISHED."
+                  )
+
+              if not video:
+                  raise SystemExit(
+                      f"ERROR: {title} has no video URL."
+                  )
+
+          print(
+              "AJVYRA RELEASE VALIDATION: 30/30 READY"
+          )
+          PY
+
+      - name: Prepare GitHub Pages
+        uses: actions/configure-pages@v5
+
+  deploy:
+    name: Deploy AJVYRA
+    needs:
+      - validate
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: "."
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,43 @@
+{
+
+  "1": {
+
+    "class_type": "CLIPTextEncode",
+
+    "inputs": {
+
+      "text": "{{POSITIVE_PROMPT}}",
+
+      "clip": ["0", 0]
+
+    }
+
+  },
+
+  "2": {
+
+    "class_type": "CLIPTextEncode",
+
+    "inputs": {
+
+      "text": "{{NEGATIVE_PROMPT}}",
+
+      "clip": ["0", 0]
+
+    }
+
+  },
+
+  "3": {
+
+    "class_type": "EmptyLatentVideo",
+
+    "inputs": {
+
+      "width": 832,
+
+      "height": 480,
+
+      "length": 81,
+
+      "batch_size": 1

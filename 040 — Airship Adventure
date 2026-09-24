@@ -1,0 +1,58 @@
+# ajvyra_game_040_airship_adventure_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Airship:
+    name: str = "Sky Raven"
+    hull: int = 100
+    fuel: int = 100
+    altitude: int = 50
+    cargo: int = 0
+
+
+class AirshipAdventure:
+    def __init__(self):
+        self.ship = Airship()
+        self.distance = 0
+        self.discovered_islands = []
+
+    def ascend(self, amount=10):
+        if self.ship.fuel <= 0:
+            return False
+
+        self.ship.altitude += amount
+        self.ship.fuel -= amount // 2
+        return True
+
+    def descend(self, amount=10):
+        self.ship.altitude = max(
+            0,
+            self.ship.altitude - amount
+        )
+
+    def fly(self, distance=10):
+        if self.ship.fuel < distance:
+            return False
+
+        self.ship.fuel -= distance
+        self.distance += distance
+        return True
+
+    def discover_island(self, name):
+        if name not in self.discovered_islands:
+            self.discovered_islands.append(name)
+            self.ship.cargo += 1
+            return True
+
+        return False
+
+    def repair(self):
+        self.ship.hull = min(
+            100,
+            self.ship.hull + 25
+        )
+
+
+GAME = AirshipAdventure()

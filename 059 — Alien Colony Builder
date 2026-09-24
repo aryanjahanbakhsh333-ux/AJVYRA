@@ -1,0 +1,52 @@
+# ajvyra_game_059_alien_colony_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class ColonyLeader:
+    name: str = "Aren-X"
+    resources: int = 300
+    population: int = 10
+    morale: int = 70
+
+
+class AlienColony:
+    def __init__(self):
+        self.leader = ColonyLeader()
+        self.structures = {}
+        self.oxygen = 100
+        self.energy = 100
+
+    def build(self, structure, cost):
+        if self.leader.resources < cost:
+            return False
+
+        self.leader.resources -= cost
+        self.structures[structure] = (
+            self.structures.get(structure, 0) + 1
+        )
+        return True
+
+    def generate_energy(self):
+        amount = self.structures.get("reactor", 0) * 20
+        self.energy = min(
+            100,
+            self.energy + amount
+        )
+
+    def grow_population(self):
+        if self.oxygen <= 0:
+            return False
+
+        self.leader.population += 2
+        self.leader.morale += 2
+        return True
+
+    def mine(self):
+        amount = 25
+        self.leader.resources += amount
+        return amount
+
+
+GAME = AlienColony()

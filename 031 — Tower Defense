@@ -1,0 +1,77 @@
+# ajvyra_game_031_tower_defense_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Tower:
+    name: str
+    damage: int
+    range: float
+    fire_rate: float
+
+
+@dataclass
+class Enemy:
+    name: str
+    hp: int
+    speed: float
+    position: float
+
+
+class TowerDefense:
+    def __init__(self):
+        self.wave = 1
+        self.lives = 20
+        self.gold = 150
+        self.towers = [
+            Tower("Pulse Tower", 20, 5.0, 1.0)
+        ]
+        self.enemies = []
+
+    def spawn_enemy(self, name="Crawler"):
+        self.enemies.append(
+            Enemy(name, 60 + self.wave * 10, 1.0, 0.0)
+        )
+
+    def build_tower(self, tower):
+        cost = 75
+
+        if self.gold < cost:
+            return False
+
+        self.gold -= cost
+        self.towers.append(tower)
+        return True
+
+    def tower_attack(self):
+        for tower in self.towers:
+            for enemy in self.enemies:
+                if enemy.hp <= 0:
+                    continue
+
+                if enemy.position <= tower.range:
+                    enemy.hp -= tower.damage
+                    break
+
+    def update(self):
+        for enemy in self.enemies:
+            if enemy.hp <= 0:
+                self.gold += 10
+                continue
+
+            enemy.position += enemy.speed
+
+            if enemy.position >= 100:
+                self.lives -= 1
+
+        self.enemies = [
+            e for e in self.enemies
+            if e.hp > 0 and e.position < 100
+        ]
+
+    def next_wave(self):
+        self.wave += 1
+
+
+GAME = TowerDefense()

@@ -1,0 +1,52 @@
+# ajvyra_game_038_urban_sandbox_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Citizen:
+    name: str = "Jax"
+    money: int = 200
+    reputation: int = 0
+    wanted: int = 0
+
+
+class UrbanSandbox:
+    def __init__(self):
+        self.player = Citizen()
+        self.location = "Central District"
+        self.vehicle = "Old Sedan"
+        self.inventory = []
+        self.missions_completed = 0
+
+    def travel(self, location):
+        self.location = location
+
+    def accept_mission(self, reward=100):
+        return {
+            "reward": reward,
+            "location": self.location,
+            "active": True
+        }
+
+    def complete_mission(self, reward):
+        self.player.money += reward
+        self.player.reputation += 1
+        self.missions_completed += 1
+
+    def buy_vehicle(self, name, price):
+        if self.player.money < price:
+            return False
+
+        self.player.money -= price
+        self.vehicle = name
+        return True
+
+    def increase_wanted(self):
+        self.player.wanted = min(
+            5,
+            self.player.wanted + 1
+        )
+
+
+GAME = UrbanSandbox()

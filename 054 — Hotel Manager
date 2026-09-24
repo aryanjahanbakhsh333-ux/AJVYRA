@@ -1,0 +1,59 @@
+# ajvyra_game_054_hotel_manager_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Manager:
+    name: str = "Elara"
+    money: int = 800
+    reputation: int = 50
+
+
+class HotelManager:
+    def __init__(self):
+        self.manager = Manager()
+        self.rooms = 10
+        self.occupied = 0
+        self.staff = 2
+        self.cleanliness = 100
+
+    def check_in(self, guests=1):
+        available = self.rooms - self.occupied
+
+        if guests > available:
+            return False
+
+        self.occupied += guests
+        return True
+
+    def check_out(self, guests=1):
+        self.occupied = max(
+            0,
+            self.occupied - guests
+        )
+
+        self.manager.money += guests * 80
+        self.cleanliness = max(
+            0,
+            self.cleanliness - guests * 5
+        )
+
+    def hire_staff(self):
+        cost = 150
+
+        if self.manager.money < cost:
+            return False
+
+        self.manager.money -= cost
+        self.staff += 1
+        return True
+
+    def clean(self):
+        self.cleanliness = min(
+            100,
+            self.cleanliness + self.staff * 10
+        )
+
+
+GAME = HotelManager()

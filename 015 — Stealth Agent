@@ -1,0 +1,42 @@
+# ajvyra_game_015_stealth_agent_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Agent:
+    name: str = "Cipher"
+    health: int = 100
+    stealth: int = 80
+    gadgets: int = 3
+
+
+class StealthAgent:
+    def __init__(self):
+        self.agent = Agent()
+        self.alert = 0
+        self.position = [0, 0]
+        self.target_secured = False
+
+    def move(self, dx, dy, noise=5):
+        self.position[0] += dx
+        self.position[1] += dy
+        self.alert = min(100, self.alert + noise)
+
+    def crouch(self):
+        self.agent.stealth = min(100, self.agent.stealth + 10)
+        self.alert = max(0, self.alert - 15)
+
+    def hack(self):
+        if self.agent.gadgets <= 0:
+            return False
+
+        self.agent.gadgets -= 1
+        self.target_secured = True
+        return True
+
+    def evade(self):
+        self.alert = max(0, self.alert - 30)
+
+
+GAME = StealthAgent()

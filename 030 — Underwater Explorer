@@ -1,0 +1,51 @@
+# ajvyra_game_030_underwater_explorer_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Diver:
+    name: str = "Nera"
+    oxygen: int = 100
+    health: int = 100
+    treasure: int = 0
+
+
+class UnderwaterExplorer:
+    def __init__(self):
+        self.player = Diver()
+        self.depth = 0
+        self.distance = 0
+        self.discovered = []
+
+    def dive(self, amount=10):
+        self.depth += amount
+        self.player.oxygen = max(
+            0,
+            self.player.oxygen - amount
+        )
+
+    def swim(self, distance=10):
+        self.distance += distance
+        self.player.oxygen = max(
+            0,
+            self.player.oxygen - distance // 5
+        )
+
+    def discover(self, object_name):
+        if object_name not in self.discovered:
+            self.discovered.append(object_name)
+            self.player.treasure += 1
+
+    def surface(self):
+        self.depth = 0
+        self.player.oxygen = 100
+
+    def danger(self, damage=15):
+        self.player.health = max(
+            0,
+            self.player.health - damage
+        )
+
+
+GAME = UnderwaterExplorer()

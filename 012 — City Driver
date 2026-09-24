@@ -1,0 +1,72 @@
+# ajvyra_game_012_city_driver_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Driver:
+    name: str = "Riven"
+    money: int = 100
+    reputation: int = 0
+
+
+@dataclass
+class Vehicle:
+    speed: float = 0.0
+    fuel: float = 100.0
+    damage: float = 0.0
+    x: float = 0.0
+    y: float = 0.0
+
+
+class CityDriver:
+    def __init__(self):
+        self.driver = Driver()
+        self.car = Vehicle()
+        self.mission = None
+        self.distance = 0.0
+
+    def accelerate(self, power=1.0):
+        self.car.speed = min(120.0, self.car.speed + 8 * power)
+        self.car.fuel = max(0, self.car.fuel - 0.5 * power)
+
+    def brake(self):
+        self.car.speed = max(0.0, self.car.speed - 15)
+
+    def steer(self, direction):
+        if direction == "left":
+            self.car.x -= max(1, self.car.speed * 0.03)
+        elif direction == "right":
+            self.car.x += max(1, self.car.speed * 0.03)
+
+    def update(self, dt=1.0):
+        self.distance += self.car.speed * dt * 0.01
+        self.car.fuel = max(0, self.car.fuel - self.car.speed * 0.002)
+
+    def start_mission(self, destination, reward):
+        self.mission = {
+            "destination": destination,
+            "reward": reward,
+            "progress": 0.0
+        }
+
+    def mission_update(self, amount):
+        if not self.mission:
+            return False
+
+        self.mission["progress"] += amount
+
+        if self.mission["progress"] >= 100:
+            self.driver.money += self.mission["reward"]
+            self.driver.reputation += 1
+            self.mission = None
+            return True
+
+        return False
+
+    def collide(self):
+        self.car.damage = min(100, self.car.damage + 15)
+        self.car.speed *= 0.5
+
+
+GAME = CityDriver()

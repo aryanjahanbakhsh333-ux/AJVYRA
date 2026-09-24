@@ -1,0 +1,67 @@
+# ajvyra_game_013_western_outlaw_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Outlaw:
+    name: str = "Veyron Cole"
+    health: int = 100
+    bullets: int = 6
+    money: int = 40
+    wanted: int = 0
+
+
+@dataclass
+class Enemy:
+    name: str
+    health: int
+    accuracy: float
+
+
+class WesternOutlaw:
+    def __init__(self):
+        self.player = Outlaw()
+        self.enemy = None
+        self.duel_started = False
+
+    def enter_duel(self, enemy_name="Marshal Dren"):
+        self.enemy = Enemy(
+            name=enemy_name,
+            health=60,
+            accuracy=0.55
+        )
+        self.duel_started = True
+
+    def reload(self):
+        self.player.bullets = 6
+
+    def shoot(self, accuracy=0.75):
+        if not self.duel_started or self.player.bullets <= 0:
+            return False
+
+        self.player.bullets -= 1
+
+        if accuracy >= 0.5:
+            self.enemy.health -= 30
+
+        return True
+
+    def enemy_attack(self, hit=True):
+        if not self.enemy or self.enemy.health <= 0:
+            return
+
+        if hit:
+            self.player.health -= 20
+
+    def win_duel(self):
+        if self.enemy and self.enemy.health <= 0:
+            self.player.money += 50
+            self.player.wanted += 1
+            self.duel_started = False
+            return True
+
+        return False
+
+
+GAME = WesternOutlaw()

@@ -1,0 +1,54 @@
+# ajvyra_game_014_survival_horror_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Survivor:
+    name: str = "Nox"
+    health: int = 100
+    sanity: int = 100
+    batteries: int = 3
+    keys: int = 0
+
+
+class SurvivalHorror:
+    def __init__(self):
+        self.player = Survivor()
+        self.location = "Abandoned Hospital"
+        self.monster_distance = 100
+        self.exit_unlocked = False
+
+    def walk(self, distance=5):
+        self.monster_distance -= distance
+        self.player.sanity = max(0, self.player.sanity - 2)
+
+    def hide(self):
+        self.monster_distance += 20
+        self.player.sanity = max(0, self.player.sanity - 1)
+
+    def flashlight(self):
+        if self.player.batteries <= 0:
+            return False
+
+        self.player.batteries -= 1
+        return True
+
+    def find_key(self):
+        self.player.keys += 1
+
+    def unlock_exit(self):
+        if self.player.keys > 0:
+            self.player.keys -= 1
+            self.exit_unlocked = True
+            return True
+
+        return False
+
+    def monster_attack(self):
+        if self.monster_distance <= 0:
+            self.player.health -= 30
+            self.monster_distance = 40
+
+
+GAME = SurvivalHorror()

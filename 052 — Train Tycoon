@@ -1,0 +1,50 @@
+# ajvyra_game_052_train_tycoon_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Conductor:
+    name: str = "Darian"
+    money: int = 500
+    reputation: int = 10
+    trains: int = 1
+
+
+class TrainTycoon:
+    def __init__(self):
+        self.player = Conductor()
+        self.distance = 0
+        self.passengers = 0
+        self.cargo = 0
+
+    def board_passengers(self, amount):
+        self.passengers += amount
+
+    def load_cargo(self, amount):
+        self.cargo += amount
+
+    def travel(self, distance):
+        self.distance += distance
+        return distance
+
+    def complete_route(self):
+        income = self.passengers * 5 + self.cargo * 3
+        self.player.money += income
+        self.player.reputation += 2
+        self.passengers = 0
+        self.cargo = 0
+        return income
+
+    def buy_train(self):
+        price = self.player.trains * 600
+
+        if self.player.money < price:
+            return False
+
+        self.player.money -= price
+        self.player.trains += 1
+        return True
+
+
+GAME = TrainTycoon()

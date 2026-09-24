@@ -1,0 +1,46 @@
+# ajvyra_game_043_treasure_hunter_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Hunter:
+    name: str = "Soren"
+    health: int = 100
+    stamina: int = 100
+    coins: int = 0
+
+
+class TreasureHunter:
+    def __init__(self):
+        self.player = Hunter()
+        self.depth = 0
+        self.treasure = []
+        self.traps = 0
+
+    def explore(self):
+        if self.player.stamina < 10:
+            return False
+
+        self.player.stamina -= 10
+        self.depth += 1
+        return True
+
+    def open_chest(self, reward):
+        self.treasure.append(reward)
+        self.player.coins += 25
+        return reward
+
+    def trigger_trap(self, damage=20):
+        self.traps += 1
+        self.player.health = max(
+            0,
+            self.player.health - damage
+        )
+
+    def return_to_surface(self):
+        self.depth = 0
+        self.player.stamina = 100
+
+
+GAME = TreasureHunter()

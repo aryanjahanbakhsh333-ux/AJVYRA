@@ -1,0 +1,49 @@
+# ajvyra_game_044_monster_racing_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Monster:
+    name: str
+    speed: float
+    stamina: float
+    power: int
+
+
+class MonsterRacing:
+    def __init__(self):
+        self.player = Monster(
+            "Fang",
+            10,
+            100,
+            15
+        )
+        self.distance = 0
+        self.obstacles = [20, 45, 70]
+        self.finished = False
+
+    def sprint(self):
+        if self.player.stamina < 15:
+            return False
+
+        self.distance += self.player.speed
+        self.player.stamina -= 15
+        return True
+
+    def roar(self):
+        self.distance += self.player.power * 0.3
+        self.player.stamina -= 5
+
+    def recover(self):
+        self.player.stamina = min(
+            100,
+            self.player.stamina + 20
+        )
+
+    def update(self):
+        if self.distance >= 100:
+            self.finished = True
+
+
+GAME = MonsterRacing()

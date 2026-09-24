@@ -1,0 +1,52 @@
+# ajvyra_game_042_city_builder_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Mayor:
+    name: str = "Elian"
+    money: int = 500
+    population: int = 20
+    happiness: int = 60
+
+
+class CityBuilder:
+    def __init__(self):
+        self.mayor = Mayor()
+        self.buildings = {}
+        self.power = 0
+        self.water = 0
+
+    def build(self, building, cost, power=0, water=0):
+        if self.mayor.money < cost:
+            return False
+
+        self.mayor.money -= cost
+        self.buildings[building] = self.buildings.get(building, 0) + 1
+        self.power += power
+        self.water += water
+        return True
+
+    def upgrade_housing(self):
+        if self.buildings.get("housing", 0) <= 0:
+            return False
+
+        self.mayor.population += 10
+        self.mayor.happiness += 3
+        return True
+
+    def collect_taxes(self):
+        income = self.mayor.population * 4
+        self.mayor.money += income
+        return income
+
+    def update_city(self):
+        if self.power < self.mayor.population:
+            self.mayor.happiness = max(
+                0,
+                self.mayor.happiness - 5
+            )
+
+
+GAME = CityBuilder()

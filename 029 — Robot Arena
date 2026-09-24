@@ -1,0 +1,77 @@
+# ajvyra_game_029_robot_arena_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Robot:
+    name: str
+    hp: int
+    energy: int
+    attack: int
+    shield: int
+
+
+class RobotArena:
+    def __init__(self):
+        self.player = Robot(
+            "AX-7",
+            120,
+            100,
+            24,
+            20
+        )
+
+        self.enemy = Robot(
+            "VOID-9",
+            130,
+            100,
+            22,
+            25
+        )
+
+    def attack(self):
+        damage = max(
+            1,
+            self.player.attack - self.enemy.shield
+        )
+
+        self.enemy.hp -= damage
+        self.player.energy = max(0, self.player.energy - 10)
+
+        return damage
+
+    def shield(self):
+        if self.player.energy < 15:
+            return False
+
+        self.player.energy -= 15
+        self.player.shield += 15
+        return True
+
+    def enemy_attack(self):
+        damage = max(
+            1,
+            self.enemy.attack - self.player.shield
+        )
+
+        self.player.hp -= damage
+
+        self.player.shield = max(
+            0,
+            self.player.shield - 5
+        )
+
+        return damage
+
+    def winner(self):
+        if self.enemy.hp <= 0:
+            return self.player.name
+
+        if self.player.hp <= 0:
+            return self.enemy.name
+
+        return None
+
+
+GAME = RobotArena()

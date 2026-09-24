@@ -1,0 +1,64 @@
+# ajvyra_game_053_space_dogfight_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Fighter:
+    name: str
+    hp: int
+    shield: int
+    energy: int
+    damage: int
+
+
+class SpaceDogfight:
+    def __init__(self):
+        self.player = Fighter(
+            "Nova-1", 100, 50, 100, 20
+        )
+        self.enemy = Fighter(
+            "Razor-9", 90, 40, 100, 18
+        )
+
+    def fire(self):
+        if self.player.energy < 10:
+            return False
+
+        self.player.energy -= 10
+
+        absorbed = min(
+            self.enemy.shield,
+            self.player.damage
+        )
+
+        self.enemy.shield -= absorbed
+        self.enemy.hp -= self.player.damage - absorbed
+        return True
+
+    def boost(self):
+        if self.player.energy < 20:
+            return False
+
+        self.player.energy -= 20
+        return True
+
+    def enemy_fire(self):
+        damage = self.enemy.damage
+
+        absorbed = min(
+            self.player.shield,
+            damage
+        )
+
+        self.player.shield -= absorbed
+        self.player.hp -= damage - absorbed
+
+    def recharge(self):
+        self.player.energy = min(
+            100,
+            self.player.energy + 20
+        )
+
+
+GAME = SpaceDogfight()

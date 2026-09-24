@@ -1,0 +1,55 @@
+# ajvyra_game_018_chess_arena_v2.py
+
+class ChessArena:
+    def __init__(self):
+        self.board = self.create_board()
+        self.turn = "white"
+        self.captured = {"white": [], "black": []}
+
+    def create_board(self):
+        return [
+            ["r", "n", "b", "q", "k", "b", "n", "r"],
+            ["p"] * 8,
+            ["."] * 8,
+            ["."] * 8,
+            ["."] * 8,
+            ["."] * 8,
+            ["P"] * 8,
+            ["R", "N", "B", "Q", "K", "B", "N", "R"]
+        ]
+
+    def piece_color(self, piece):
+        if piece == ".":
+            return None
+        return "white" if piece.isupper() else "black"
+
+    def move(self, fr, fc, tr, tc):
+        piece = self.board[fr][fc]
+
+        if piece == ".":
+            return False
+
+        if self.piece_color(piece) != self.turn:
+            return False
+
+        target = self.board[tr][tc]
+
+        if target != ".":
+            self.captured[self.turn].append(target)
+
+        self.board[tr][tc] = piece
+        self.board[fr][fc] = "."
+
+        self.turn = "black" if self.turn == "white" else "white"
+        return True
+
+    def legal_basic_move(self, fr, fc, tr, tc):
+        return (
+            0 <= fr < 8 and
+            0 <= fc < 8 and
+            0 <= tr < 8 and
+            0 <= tc < 8
+        )
+
+
+GAME = ChessArena()

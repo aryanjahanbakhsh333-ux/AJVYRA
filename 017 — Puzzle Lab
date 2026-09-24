@@ -1,0 +1,56 @@
+# ajvyra_game_017_puzzle_lab_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class PuzzleState:
+    level: int = 1
+    moves: int = 0
+    solved: bool = False
+
+
+class PuzzleLab:
+    def __init__(self):
+        self.state = PuzzleState()
+        self.grid = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 0]
+        ]
+
+    def move_tile(self, tile):
+        for r in range(3):
+            for c in range(3):
+                if self.grid[r][c] == tile:
+                    tr, tc = r, c
+
+        zr = zc = None
+
+        for r in range(3):
+            for c in range(3):
+                if self.grid[r][c] == 0:
+                    zr, zc = r, c
+
+        if abs(tr - zr) + abs(tc - zc) != 1:
+            return False
+
+        self.grid[zr][zc], self.grid[tr][tc] = (
+            self.grid[tr][tc],
+            self.grid[zr][zc]
+        )
+
+        self.state.moves += 1
+        self.state.solved = self.is_solved()
+
+        return True
+
+    def is_solved(self):
+        return self.grid == [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 0]
+        ]
+
+
+GAME = PuzzleLab()

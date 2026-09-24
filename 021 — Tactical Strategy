@@ -1,0 +1,56 @@
+# ajvyra_game_021_tactical_strategy_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Unit:
+    name: str
+    hp: int
+    attack: int
+    defense: int
+    x: int
+    y: int
+
+
+class TacticalStrategy:
+    def __init__(self):
+        self.turn = 1
+        self.gold = 100
+        self.units = [
+            Unit("Commander Vex", 120, 25, 12, 1, 1),
+            Unit("Scout Nyra", 70, 18, 6, 2, 1),
+            Unit("Guardian Sol", 100, 15, 20, 1, 2),
+        ]
+        self.enemies = [
+            Unit("Raider", 60, 16, 5, 6, 6),
+            Unit("Sentinel", 90, 20, 12, 7, 6),
+        ]
+
+    def move_unit(self, unit_index, x, y):
+        unit = self.units[unit_index]
+
+        if abs(unit.x - x) + abs(unit.y - y) > 3:
+            return False
+
+        unit.x = x
+        unit.y = y
+        return True
+
+    def attack(self, attacker_index, enemy_index):
+        attacker = self.units[attacker_index]
+        enemy = self.enemies[enemy_index]
+
+        damage = max(1, attacker.attack - enemy.defense)
+        enemy.hp -= damage
+
+        if enemy.hp <= 0:
+            self.gold += 25
+
+        return damage
+
+    def next_turn(self):
+        self.turn += 1
+
+
+GAME = TacticalStrategy()

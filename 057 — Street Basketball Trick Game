@@ -1,0 +1,52 @@
+# ajvyra_game_057_street_basketball_tricks_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Player:
+    name: str = "Jett"
+    score: int = 0
+    stamina: int = 100
+    combo: int = 0
+
+
+class StreetBasketballTricks:
+    def __init__(self):
+        self.player = Player()
+        self.ball_control = 80
+
+    def crossover(self):
+        self.player.combo += 1
+        self.player.score += 20
+        self.player.stamina -= 5
+
+    def spin_move(self):
+        if self.player.stamina < 10:
+            return False
+
+        self.player.stamina -= 10
+        self.player.combo += 1
+        self.player.score += 35
+        return True
+
+    def dunk(self):
+        if self.player.stamina < 20:
+            return False
+
+        self.player.stamina -= 20
+        self.player.score += 100 + self.player.combo * 10
+        self.player.combo += 1
+        return True
+
+    def reset_combo(self):
+        self.player.combo = 0
+
+    def rest(self):
+        self.player.stamina = min(
+            100,
+            self.player.stamina + 25
+        )
+
+
+GAME = StreetBasketballTricks()

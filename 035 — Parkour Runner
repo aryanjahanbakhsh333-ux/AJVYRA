@@ -1,0 +1,57 @@
+# ajvyra_game_035_parkour_runner_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Runner:
+    name: str = "Kai"
+    stamina: int = 100
+    score: int = 0
+    combo: int = 0
+
+
+class ParkourRunner:
+    def __init__(self):
+        self.runner = Runner()
+        self.distance = 0.0
+        self.height = 0.0
+
+    def run(self, amount=10):
+        if self.runner.stamina <= 0:
+            return False
+
+        self.distance += amount
+        self.runner.stamina = max(
+            0,
+            self.runner.stamina - 3
+        )
+        return True
+
+    def jump(self):
+        self.height += 2
+        self.runner.stamina = max(
+            0,
+            self.runner.stamina - 5
+        )
+
+    def vault(self):
+        self.runner.score += 25
+        self.runner.combo += 1
+
+    def slide(self):
+        self.runner.score += 15
+        self.runner.combo += 1
+
+    def land(self):
+        self.height = 0
+        self.runner.score += self.runner.combo * 10
+
+    def rest(self):
+        self.runner.stamina = min(
+            100,
+            self.runner.stamina + 20
+        )
+
+
+GAME = ParkourRunner()

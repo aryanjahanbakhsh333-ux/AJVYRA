@@ -1,0 +1,47 @@
+# ajvyra_game_049_ancient_puzzle_temple_v2.py
+
+class AncientPuzzleTemple:
+    def __init__(self):
+        self.player = "Aren"
+        self.room = 1
+        self.keys = 0
+        self.runes = set()
+        self.energy = 100
+        self.door_open = False
+
+        self.correct_runes = {
+            "moon",
+            "sun",
+            "star"
+        }
+
+    def activate_rune(self, rune):
+        if self.energy < 5:
+            return False
+
+        self.energy -= 5
+        self.runes.add(rune)
+        return True
+
+    def solve_room(self):
+        if self.correct_runes.issubset(self.runes):
+            self.keys += 1
+            self.runes.clear()
+            return True
+
+        return False
+
+    def open_door(self):
+        if self.keys <= 0:
+            return False
+
+        self.keys -= 1
+        self.door_open = True
+        self.room += 1
+        return True
+
+    def rest(self):
+        self.energy = min(100, self.energy + 25)
+
+
+GAME = AncientPuzzleTemple()

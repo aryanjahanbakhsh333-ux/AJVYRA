@@ -1,0 +1,55 @@
+# ajvyra_game_048_fishing_tycoon_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Captain:
+    name: str = "Maren"
+    money: int = 300
+    boat_level: int = 1
+    crew: int = 1
+
+
+class FishingTycoon:
+    def __init__(self):
+        self.captain = Captain()
+        self.fish_stock = 0
+        self.day = 1
+
+    def fish(self):
+        amount = 5 * self.captain.boat_level
+        self.fish_stock += amount
+        return amount
+
+    def sell_fish(self, price=4):
+        income = self.fish_stock * price
+        self.captain.money += income
+        self.fish_stock = 0
+        return income
+
+    def upgrade_boat(self):
+        cost = self.captain.boat_level * 250
+
+        if self.captain.money < cost:
+            return False
+
+        self.captain.money -= cost
+        self.captain.boat_level += 1
+        return True
+
+    def hire_crew(self):
+        cost = 150
+
+        if self.captain.money < cost:
+            return False
+
+        self.captain.money -= cost
+        self.captain.crew += 1
+        return True
+
+    def next_day(self):
+        self.day += 1
+
+
+GAME = FishingTycoon()

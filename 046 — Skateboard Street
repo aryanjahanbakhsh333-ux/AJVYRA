@@ -1,0 +1,56 @@
+# ajvyra_game_046_skateboard_street_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Skater:
+    name: str = "Juno"
+    balance: int = 100
+    score: int = 0
+    combo: int = 0
+
+
+class SkateboardStreet:
+    def __init__(self):
+        self.player = Skater()
+        self.speed = 0
+        self.distance = 0
+
+    def push(self):
+        self.speed = min(30, self.speed + 5)
+        self.distance += self.speed
+
+    def ollie(self):
+        if self.player.balance < 15:
+            return False
+
+        self.player.balance -= 15
+        self.player.score += 100
+        self.player.combo += 1
+        return True
+
+    def grind(self):
+        if self.player.balance < 20:
+            return False
+
+        self.player.balance -= 20
+        self.player.score += 150
+        self.player.combo += 1
+        return True
+
+    def land(self):
+        self.player.balance = min(
+            100,
+            self.player.balance + 10
+        )
+
+    def crash(self):
+        self.player.combo = 0
+        self.player.balance = max(
+            0,
+            self.player.balance - 30
+        )
+
+
+GAME = SkateboardStreet()

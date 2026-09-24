@@ -1,0 +1,52 @@
+# ajvyra_game_033_cooking_challenge_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Chef:
+    name: str = "Mira"
+    reputation: int = 0
+    money: int = 100
+
+
+class CookingChallenge:
+    def __init__(self):
+        self.chef = Chef()
+        self.ingredients = {
+            "tomato": 3,
+            "cheese": 2,
+            "bread": 4,
+            "mushroom": 2
+        }
+        self.recipe = []
+        self.orders = [
+            ["bread", "cheese", "tomato"],
+            ["bread", "mushroom", "cheese"]
+        ]
+
+    def add_ingredient(self, ingredient):
+        if self.ingredients.get(ingredient, 0) <= 0:
+            return False
+
+        self.ingredients[ingredient] -= 1
+        self.recipe.append(ingredient)
+        return True
+
+    def serve(self, order_index=0):
+        if order_index >= len(self.orders):
+            return False
+
+        order = self.orders[order_index]
+
+        if sorted(self.recipe) != sorted(order):
+            self.recipe.clear()
+            return False
+
+        self.chef.money += 40
+        self.chef.reputation += 2
+        self.recipe.clear()
+        return True
+
+
+GAME = CookingChallenge()

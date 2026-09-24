@@ -1,0 +1,56 @@
+# ajvyra_game_056_monster_farm_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Creature:
+    name: str
+    happiness: int = 50
+    energy: int = 100
+    level: int = 1
+
+
+class MonsterFarm:
+    def __init__(self):
+        self.creatures = [
+            Creature("Mochi"),
+            Creature("Brim"),
+            Creature("Luma")
+        ]
+        self.coins = 100
+
+    def feed(self, index):
+        if index >= len(self.creatures):
+            return False
+
+        creature = self.creatures[index]
+        creature.happiness = min(
+            100,
+            creature.happiness + 15
+        )
+        return True
+
+    def train(self, index):
+        if index >= len(self.creatures):
+            return False
+
+        creature = self.creatures[index]
+
+        if creature.energy < 20:
+            return False
+
+        creature.energy -= 20
+        creature.level += 1
+        return True
+
+    def rest_all(self):
+        for creature in self.creatures:
+            creature.energy = 100
+
+    def sell_product(self, value=30):
+        self.coins += value
+        return value
+
+
+GAME = MonsterFarm()

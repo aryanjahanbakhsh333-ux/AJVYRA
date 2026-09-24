@@ -1,0 +1,53 @@
+# ajvyra_game_045_magic_academy_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Mage:
+    name: str = "Lyra"
+    health: int = 100
+    mana: int = 100
+    knowledge: int = 0
+
+
+class MagicAcademy:
+    def __init__(self):
+        self.student = Mage()
+        self.spells = {
+            "fire": 20,
+            "ice": 15,
+            "shield": 25
+        }
+        self.lessons_completed = 0
+
+    def cast(self, spell):
+        cost = self.spells.get(spell)
+
+        if cost is None or self.student.mana < cost:
+            return False
+
+        self.student.mana -= cost
+        return True
+
+    def study(self):
+        self.student.knowledge += 10
+        self.lessons_completed += 1
+
+    def meditate(self):
+        self.student.mana = min(
+            100,
+            self.student.mana + 30
+        )
+
+    def level_up(self):
+        if self.student.knowledge >= 100:
+            self.student.knowledge -= 100
+            self.student.health += 10
+            self.student.mana += 10
+            return True
+
+        return False
+
+
+GAME = MagicAcademy()

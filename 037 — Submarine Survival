@@ -1,0 +1,58 @@
+# ajvyra_game_037_submarine_survival_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Submarine:
+    name: str = "Abyss-7"
+    hull: int = 100
+    oxygen: int = 100
+    fuel: int = 100
+    depth: int = 0
+
+
+class SubmarineSurvival:
+    def __init__(self):
+        self.sub = Submarine()
+        self.mission_progress = 0
+        self.enemy_alert = 0
+
+    def dive(self, amount=10):
+        self.sub.depth += amount
+        self.sub.oxygen = max(
+            0,
+            self.sub.oxygen - amount // 2
+        )
+
+    def surface(self):
+        self.sub.depth = 0
+        self.sub.oxygen = 100
+
+    def move(self, distance=10):
+        if self.sub.fuel < distance:
+            return False
+
+        self.sub.fuel -= distance
+        self.mission_progress += distance
+        return True
+
+    def sonar(self):
+        self.enemy_alert = min(
+            100,
+            self.enemy_alert + 10
+        )
+
+        return {
+            "depth": self.sub.depth,
+            "alert": self.enemy_alert
+        }
+
+    def repair(self):
+        self.sub.hull = min(
+            100,
+            self.sub.hull + 20
+        )
+
+
+GAME = SubmarineSurvival()

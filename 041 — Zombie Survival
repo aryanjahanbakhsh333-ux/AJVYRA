@@ -1,0 +1,61 @@
+# ajvyra_game_041_zombie_survival_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Survivor:
+    name: str = "Rian"
+    health: int = 100
+    stamina: int = 100
+    ammo: int = 12
+    food: int = 5
+
+
+class ZombieSurvival:
+    def __init__(self):
+        self.player = Survivor()
+        self.day = 1
+        self.zombies = 5
+        self.supplies = 0
+        self.base_integrity = 100
+
+    def shoot(self):
+        if self.player.ammo <= 0 or self.zombies <= 0:
+            return False
+
+        self.player.ammo -= 1
+        self.zombies -= 1
+        return True
+
+    def run(self):
+        if self.player.stamina < 20:
+            return False
+
+        self.player.stamina -= 20
+        return True
+
+    def search(self):
+        self.supplies += 1
+        self.player.food += 1
+        return True
+
+    def eat(self):
+        if self.player.food <= 0:
+            return False
+
+        self.player.food -= 1
+        self.player.health = min(100, self.player.health + 15)
+        return True
+
+    def defend_base(self):
+        damage = self.zombies * 3
+        self.base_integrity = max(0, self.base_integrity - damage)
+
+    def next_day(self):
+        self.day += 1
+        self.zombies += 2
+        self.player.stamina = 100
+
+
+GAME = ZombieSurvival()

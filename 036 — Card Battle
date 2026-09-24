@@ -1,0 +1,57 @@
+# ajvyra_game_036_card_battle_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Card:
+    name: str
+    attack: int
+    health: int
+    cost: int
+
+
+class CardBattle:
+    def __init__(self):
+        self.player_hp = 100
+        self.enemy_hp = 100
+        self.energy = 5
+
+        self.hand = [
+            Card("Flame Fox", 25, 30, 2),
+            Card("Stone Guardian", 15, 50, 3),
+            Card("Wind Blade", 20, 20, 1)
+        ]
+
+    def play_card(self, index):
+        if index < 0 or index >= len(self.hand):
+            return False
+
+        card = self.hand[index]
+
+        if card.cost > self.energy:
+            return False
+
+        self.energy -= card.cost
+        self.enemy_hp -= card.attack
+        self.hand.pop(index)
+
+        return True
+
+    def enemy_turn(self):
+        self.player_hp -= 15
+
+    def restore_energy(self):
+        self.energy = min(10, self.energy + 3)
+
+    def winner(self):
+        if self.enemy_hp <= 0:
+            return "player"
+
+        if self.player_hp <= 0:
+            return "enemy"
+
+        return None
+
+
+GAME = CardBattle()

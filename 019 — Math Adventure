@@ -1,0 +1,59 @@
+# ajvyra_game_019_math_adventure_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Student:
+    name: str = "Luma"
+    score: int = 0
+    level: int = 1
+    streak: int = 0
+
+
+class MathAdventure:
+    def __init__(self):
+        self.student = Student()
+        self.questions = [
+            (3, "+", 4, 7),
+            (9, "-", 2, 7),
+            (5, "*", 3, 15),
+            (20, "/", 4, 5)
+        ]
+        self.index = 0
+
+    def current_question(self):
+        if self.index >= len(self.questions):
+            return None
+
+        a, op, b, answer = self.questions[self.index]
+
+        return {
+            "a": a,
+            "operator": op,
+            "b": b
+        }
+
+    def answer(self, value):
+        if self.index >= len(self.questions):
+            return False
+
+        correct = self.questions[self.index][3]
+
+        if value == correct:
+            self.student.score += 10
+            self.student.streak += 1
+
+            if self.student.streak % 3 == 0:
+                self.student.level += 1
+
+            result = True
+        else:
+            self.student.streak = 0
+            result = False
+
+        self.index += 1
+        return result
+
+
+GAME = MathAdventure()

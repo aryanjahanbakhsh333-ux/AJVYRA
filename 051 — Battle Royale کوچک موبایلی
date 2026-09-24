@@ -1,0 +1,48 @@
+# ajvyra_game_051_battle_royale_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Survivor:
+    name: str = "Varen"
+    health: int = 100
+    armor: int = 25
+    ammo: int = 20
+
+
+class BattleRoyale:
+    def __init__(self):
+        self.player = Survivor()
+        self.players_left = 24
+        self.zone_radius = 100
+        self.position = [0, 0]
+        self.eliminations = 0
+
+    def move(self, dx, dy):
+        self.position[0] += dx
+        self.position[1] += dy
+
+    def shoot(self):
+        if self.player.ammo <= 0:
+            return False
+
+        self.player.ammo -= 1
+        self.eliminations += 1
+        self.players_left = max(1, self.players_left - 1)
+        return True
+
+    def take_damage(self, amount):
+        absorbed = min(self.player.armor, amount)
+        self.player.armor -= absorbed
+        self.player.health -= amount - absorbed
+
+    def shrink_zone(self, amount=10):
+        self.zone_radius = max(10, self.zone_radius - amount)
+
+    def outside_zone(self):
+        distance = abs(self.position[0]) + abs(self.position[1])
+        return distance > self.zone_radius
+
+
+GAME = BattleRoyale()

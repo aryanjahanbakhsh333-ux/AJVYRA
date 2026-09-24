@@ -1,0 +1,61 @@
+# ajvyra_game_055_detective_heist_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Detective:
+    name: str = "Noir"
+    stealth: int = 80
+    evidence: int = 0
+    suspicion: int = 0
+
+
+class DetectiveHeist:
+    def __init__(self):
+        self.player = Detective()
+        self.vault_open = False
+        self.loot = 0
+        self.security = 100
+
+    def scout(self):
+        self.security = max(
+            0,
+            self.security - 10
+        )
+        self.player.evidence += 1
+
+    def sneak(self):
+        self.player.suspicion = max(
+            0,
+            self.player.suspicion - 15
+        )
+
+    def hack_security(self):
+        if self.player.evidence < 2:
+            return False
+
+        self.security = max(
+            0,
+            self.security - 40
+        )
+        return True
+
+    def open_vault(self):
+        if self.security <= 20:
+            self.vault_open = True
+            return True
+
+        self.player.suspicion += 25
+        return False
+
+    def collect_loot(self):
+        if not self.vault_open:
+            return 0
+
+        self.loot += 500
+        self.vault_open = False
+        return 500
+
+
+GAME = DetectiveHeist()

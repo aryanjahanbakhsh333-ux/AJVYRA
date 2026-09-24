@@ -1,0 +1,51 @@
+# ajvyra_game_026_farm_builder_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Farmer:
+    name: str = "Lina"
+    money: int = 150
+    energy: int = 100
+
+
+class FarmBuilder:
+    def __init__(self):
+        self.player = Farmer()
+        self.crops = {}
+        self.animals = 0
+        self.day = 1
+
+    def plant(self, crop, cost=10):
+        if self.player.money < cost:
+            return False
+
+        self.player.money -= cost
+        self.crops[crop] = self.crops.get(crop, 0) + 1
+        return True
+
+    def harvest(self, crop, value=25):
+        amount = self.crops.get(crop, 0)
+
+        if amount <= 0:
+            return False
+
+        self.player.money += amount * value
+        del self.crops[crop]
+        return True
+
+    def buy_animal(self, cost=75):
+        if self.player.money < cost:
+            return False
+
+        self.player.money -= cost
+        self.animals += 1
+        return True
+
+    def next_day(self):
+        self.day += 1
+        self.player.energy = 100
+
+
+GAME = FarmBuilder()

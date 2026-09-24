@@ -1,0 +1,57 @@
+# ajvyra_game_032_kart_racing_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Kart:
+    driver: str
+    speed: float = 0.0
+    acceleration: float = 8.0
+    nitro: int = 3
+
+
+class KartRacing:
+    def __init__(self):
+        self.player = Kart("Zane")
+        self.position = 0.0
+        self.checkpoints = 0
+        self.race_finished = False
+
+    def accelerate(self):
+        self.player.speed = min(
+            150,
+            self.player.speed + self.player.acceleration
+        )
+
+    def drift(self, direction):
+        self.player.speed = max(
+            0,
+            self.player.speed - 3
+        )
+
+        return direction
+
+    def nitro_boost(self):
+        if self.player.nitro <= 0:
+            return False
+
+        self.player.nitro -= 1
+        self.player.speed = min(
+            220,
+            self.player.speed + 45
+        )
+        return True
+
+    def update(self, dt=1.0):
+        self.position += self.player.speed * dt * 0.01
+
+        if self.position >= 100:
+            self.position = 0
+            self.checkpoints += 1
+
+            if self.checkpoints >= 3:
+                self.race_finished = True
+
+
+GAME = KartRacing()

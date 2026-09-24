@@ -1,0 +1,51 @@
+# ajvyra_game_023_dungeon_crawler_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Adventurer:
+    name: str = "Eryn"
+    hp: int = 100
+    attack: int = 22
+    gold: int = 0
+    potions: int = 2
+
+
+class DungeonCrawler:
+    def __init__(self):
+        self.player = Adventurer()
+        self.floor = 1
+        self.rooms = []
+        self.current_room = 0
+        self.treasure_found = False
+
+    def enter_room(self, room_type):
+        self.rooms.append(room_type)
+        self.current_room += 1
+
+        if room_type == "treasure":
+            self.player.gold += 50
+            self.treasure_found = True
+
+        return room_type
+
+    def fight(self, enemy_hp, enemy_defense=5):
+        damage = max(1, self.player.attack - enemy_defense)
+        enemy_hp -= damage
+        return enemy_hp
+
+    def drink_potion(self):
+        if self.player.potions <= 0:
+            return False
+
+        self.player.potions -= 1
+        self.player.hp = min(100, self.player.hp + 35)
+        return True
+
+    def descend(self):
+        self.floor += 1
+        self.treasure_found = False
+
+
+GAME = DungeonCrawler()

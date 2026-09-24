@@ -1,0 +1,53 @@
+# ajvyra_game_016_platform_quest_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Hero:
+    name: str = "Mira"
+    health: int = 3
+    coins: int = 0
+
+
+class PlatformQuest:
+    def __init__(self):
+        self.hero = Hero()
+        self.x = 0.0
+        self.y = 0.0
+        self.velocity_y = 0.0
+        self.grounded = True
+        self.level = 1
+
+    def move(self, direction):
+        if direction == "left":
+            self.x -= 5
+
+        elif direction == "right":
+            self.x += 5
+
+    def jump(self):
+        if self.grounded:
+            self.velocity_y = 12
+            self.grounded = False
+
+    def update(self, gravity=0.6):
+        self.velocity_y -= gravity
+        self.y += self.velocity_y
+
+        if self.y <= 0:
+            self.y = 0
+            self.velocity_y = 0
+            self.grounded = True
+
+    def collect_coin(self):
+        self.hero.coins += 1
+
+    def take_hit(self):
+        self.hero.health -= 1
+
+    def next_level(self):
+        self.level += 1
+
+
+GAME = PlatformQuest()

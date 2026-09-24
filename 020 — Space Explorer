@@ -1,0 +1,65 @@
+# ajvyra_game_020_space_explorer_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Explorer:
+    name: str = "Orion"
+    hull: int = 100
+    fuel: int = 100
+    energy: int = 100
+    credits: int = 50
+
+
+class SpaceExplorer:
+    def __init__(self):
+        self.player = Explorer()
+        self.x = 0.0
+        self.y = 0.0
+        self.discovered = []
+        self.mission = "Find the lost signal."
+
+    def thrust(self, direction, amount=5):
+        if self.player.fuel <= 0:
+            return False
+
+        self.player.fuel -= amount
+
+        if direction == "up":
+            self.y += amount
+        elif direction == "down":
+            self.y -= amount
+        elif direction == "left":
+            self.x -= amount
+        elif direction == "right":
+            self.x += amount
+
+        return True
+
+    def scan(self):
+        if self.player.energy < 10:
+            return None
+
+        self.player.energy -= 10
+
+        sector = f"sector_{int(self.x)}_{int(self.y)}"
+
+        if sector not in self.discovered:
+            self.discovered.append(sector)
+
+        return sector
+
+    def repair(self):
+        if self.player.credits < 20:
+            return False
+
+        self.player.credits -= 20
+        self.player.hull = min(100, self.player.hull + 25)
+        return True
+
+    def collect_reward(self, amount):
+        self.player.credits += amount
+
+
+GAME = SpaceExplorer()

@@ -1,0 +1,51 @@
+# ajvyra_game_025_detective_mystery_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Detective:
+    name: str = "Riven Ash"
+    clues: int = 0
+    reputation: int = 0
+
+
+class DetectiveMystery:
+    def __init__(self):
+        self.player = Detective()
+        self.location = "Rainfall District"
+        self.clues = []
+        self.suspects = [
+            "The Locksmith",
+            "The Painter",
+            "The Night Guard"
+        ]
+        self.case_solved = False
+
+    def investigate(self, clue):
+        if clue not in self.clues:
+            self.clues.append(clue)
+            self.player.clues += 1
+
+    def question(self, suspect):
+        if suspect not in self.suspects:
+            return None
+
+        responses = {
+            "The Locksmith": "I was repairing an old door.",
+            "The Painter": "I saw someone near the river.",
+            "The Night Guard": "The street went dark at midnight."
+        }
+
+        return responses[suspect]
+
+    def solve_case(self, required_clues=3):
+        if self.player.clues >= required_clues:
+            self.case_solved = True
+            self.player.reputation += 10
+            return True
+
+        return False
+
+
+GAME = DetectiveMystery()

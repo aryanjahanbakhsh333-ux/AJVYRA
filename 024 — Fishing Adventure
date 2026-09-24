@@ -1,0 +1,57 @@
+# ajvyra_game_024_fishing_adventure_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Fisher:
+    name: str = "Milo"
+    bait: int = 10
+    money: int = 0
+    skill: int = 1
+
+
+class FishingAdventure:
+    def __init__(self):
+        self.player = Fisher()
+        self.line_strength = 100
+        self.fish = None
+        self.caught = 0
+
+    def cast(self):
+        if self.player.bait <= 0:
+            return False
+
+        self.player.bait -= 1
+        self.fish = {
+            "species": "Moon Carp",
+            "strength": 25
+        }
+        return True
+
+    def reel(self, power=10):
+        if not self.fish:
+            return False
+
+        self.fish["strength"] -= power
+
+        if self.fish["strength"] <= 0:
+            self.caught += 1
+            self.player.money += 15
+            self.fish = None
+            return True
+
+        self.line_strength -= 5
+        return False
+
+    def upgrade_skill(self):
+        if self.player.money >= 50:
+            self.player.money -= 50
+            self.player.skill += 1
+            self.line_strength += 20
+            return True
+
+        return False
+
+
+GAME = FishingAdventure()

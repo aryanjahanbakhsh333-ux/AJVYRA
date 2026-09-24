@@ -1,0 +1,56 @@
+# ajvyra_game_058_snowboard_mountain_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Snowboarder:
+    name: str = "Ayla"
+    speed: float = 0
+    balance: int = 100
+    score: int = 0
+
+
+class SnowboardMountain:
+    def __init__(self):
+        self.player = Snowboarder()
+        self.altitude = 1000
+        self.distance = 0
+
+    def accelerate(self):
+        self.player.speed = min(
+            100,
+            self.player.speed + 8
+        )
+
+    def carve(self, direction):
+        self.player.balance = max(
+            0,
+            self.player.balance - 5
+        )
+        self.distance += 5
+        return direction
+
+    def jump(self):
+        if self.player.balance < 20:
+            return False
+
+        self.player.balance -= 20
+        self.player.score += 75
+        return True
+
+    def land(self):
+        self.player.balance = min(
+            100,
+            self.player.balance + 10
+        )
+
+    def update(self):
+        self.distance += self.player.speed * 0.05
+        self.altitude = max(
+            0,
+            self.altitude - int(self.player.speed * 0.1)
+        )
+
+
+GAME = SnowboardMountain()

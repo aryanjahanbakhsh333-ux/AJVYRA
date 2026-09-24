@@ -1,0 +1,57 @@
+# ajvyra_game_050_fantasy_adventure_v2.py
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class Adventurer:
+    name: str = "Elyon"
+    health: int = 100
+    mana: int = 80
+    gold: int = 100
+    level: int = 1
+
+
+class FantasyAdventure:
+    def __init__(self):
+        self.hero = Adventurer()
+        self.location = "Moonvale"
+        self.party = ["Elyon", "Seris", "Torren"]
+        self.quests = []
+        self.relics = []
+
+    def travel(self, location):
+        self.location = location
+
+    def accept_quest(self, quest):
+        if quest not in self.quests:
+            self.quests.append(quest)
+
+    def complete_quest(self, quest, reward=75):
+        if quest not in self.quests:
+            return False
+
+        self.quests.remove(quest)
+        self.hero.gold += reward
+        self.hero.level += 1
+        return True
+
+    def cast_spell(self, mana_cost=20, damage=30):
+        if self.hero.mana < mana_cost:
+            return 0
+
+        self.hero.mana -= mana_cost
+        return damage
+
+    def collect_relic(self, relic):
+        if relic not in self.relics:
+            self.relics.append(relic)
+
+    def heal(self):
+        self.hero.health = min(
+            100,
+            self.hero.health + 25
+        )
+
+
+GAME = FantasyAdventure()

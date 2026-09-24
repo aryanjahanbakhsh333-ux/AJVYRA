@@ -1,0 +1,41 @@
+# ajvyra_game_039_choice_story_v2.py
+
+class ChoiceStory:
+    def __init__(self):
+        self.chapter = 1
+        self.location = "The Last Station"
+        self.relationships = {
+            "Nera": 0,
+            "Vale": 0
+        }
+        self.flags = {}
+        self.ending = None
+
+    def choose(self, character, decision):
+        if character in self.relationships:
+            if decision == "help":
+                self.relationships[character] += 2
+
+            elif decision == "ignore":
+                self.relationships[character] -= 1
+
+        self.flags[f"{character}_{decision}"] = True
+
+    def travel(self, destination):
+        self.location = destination
+        self.chapter += 1
+
+    def determine_ending(self):
+        total = sum(self.relationships.values())
+
+        if total >= 3:
+            self.ending = "Together"
+        elif total <= -1:
+            self.ending = "Alone"
+        else:
+            self.ending = "Unknown"
+
+        return self.ending
+
+
+GAME = ChoiceStory()

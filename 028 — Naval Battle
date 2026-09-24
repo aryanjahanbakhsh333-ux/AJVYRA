@@ -1,0 +1,62 @@
+# ajvyra_game_028_naval_battle_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Ship:
+    name: str
+    hp: int
+    attack: int
+    x: int
+    y: int
+
+
+class NavalBattle:
+    def __init__(self):
+        self.player_ship = Ship(
+            "Stormbreaker",
+            150,
+            30,
+            1,
+            1
+        )
+
+        self.enemy_ship = Ship(
+            "Black Tide",
+            130,
+            25,
+            8,
+            8
+        )
+
+        self.ammo = 12
+
+    def move(self, dx, dy):
+        self.player_ship.x += dx
+        self.player_ship.y += dy
+
+    def fire(self):
+        if self.ammo <= 0:
+            return False
+
+        self.ammo -= 1
+
+        distance = abs(
+            self.player_ship.x - self.enemy_ship.x
+        ) + abs(
+            self.player_ship.y - self.enemy_ship.y
+        )
+
+        if distance <= 5:
+            self.enemy_ship.hp -= self.player_ship.attack
+            return True
+
+        return False
+
+    def enemy_fire(self):
+        if self.enemy_ship.hp > 0:
+            self.player_ship.hp -= self.enemy_ship.attack
+
+
+GAME = NavalBattle()

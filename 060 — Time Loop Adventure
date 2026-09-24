@@ -1,0 +1,44 @@
+# ajvyra_game_060_time_loop_v2.py
+
+class TimeLoopAdventure:
+    def __init__(self):
+        self.hero = "Eren Vale"
+        self.loop = 1
+        self.time = 0
+        self.memories = set()
+        self.flags = {}
+        self.ending_unlocked = False
+
+    def advance_time(self, minutes):
+        self.time += minutes
+
+        if self.time >= 1440:
+            self.reset_loop()
+            return "loop_reset"
+
+        return "time_advanced"
+
+    def discover_memory(self, memory):
+        self.memories.add(memory)
+
+    def change_event(self, event, value=True):
+        self.flags[event] = value
+
+    def reset_loop(self):
+        self.loop += 1
+        self.time = 0
+
+    def check_final_path(self):
+        required = {
+            "saved_friend",
+            "opened_clock",
+            "found_letter"
+        }
+
+        if required.issubset(self.flags):
+            self.ending_unlocked = True
+
+        return self.ending_unlocked
+
+
+GAME = TimeLoopAdventure()

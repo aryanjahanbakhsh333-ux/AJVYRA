@@ -1,0 +1,47 @@
+# ajvyra_game_027_rhythm_music_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Performer:
+    name: str = "Zeri"
+    score: int = 0
+    combo: int = 0
+    best_combo: int = 0
+
+
+class RhythmMusic:
+    def __init__(self):
+        self.player = Performer()
+        self.notes = ["left", "up", "down", "right"] * 8
+        self.index = 0
+
+    def hit(self, direction):
+        if self.index >= len(self.notes):
+            return "finished"
+
+        expected = self.notes[self.index]
+
+        if direction == expected:
+            self.player.combo += 1
+            self.player.score += 100 + self.player.combo * 5
+
+            self.player.best_combo = max(
+                self.player.best_combo,
+                self.player.combo
+            )
+
+            result = "perfect"
+        else:
+            self.player.combo = 0
+            result = "miss"
+
+        self.index += 1
+        return result
+
+    def finished(self):
+        return self.index >= len(self.notes)
+
+
+GAME = RhythmMusic()

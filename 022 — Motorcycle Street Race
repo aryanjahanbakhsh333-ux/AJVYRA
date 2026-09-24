@@ -1,0 +1,47 @@
+# ajvyra_game_022_motorcycle_race_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Rider:
+    name: str = "Kairo"
+    speed: float = 0
+    nitro: float = 100
+    health: int = 100
+
+
+class MotorcycleRace:
+    def __init__(self):
+        self.rider = Rider()
+        self.position = 0.0
+        self.lap = 1
+        self.max_laps = 3
+        self.finished = False
+
+    def accelerate(self):
+        self.rider.speed = min(180, self.rider.speed + 12)
+
+    def brake(self):
+        self.rider.speed = max(0, self.rider.speed - 20)
+
+    def nitro_boost(self):
+        if self.rider.nitro <= 0:
+            return False
+
+        self.rider.nitro -= 20
+        self.rider.speed = min(240, self.rider.speed + 45)
+        return True
+
+    def update(self, dt=1.0):
+        self.position += self.rider.speed * dt * 0.01
+
+        if self.position >= 100:
+            self.position -= 100
+            self.lap += 1
+
+            if self.lap > self.max_laps:
+                self.finished = True
+
+
+GAME = MotorcycleRace()

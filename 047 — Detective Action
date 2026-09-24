@@ -1,0 +1,48 @@
+# ajvyra_game_047_detective_action_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Investigator:
+    name: str = "Vale"
+    health: int = 100
+    evidence: int = 0
+    reputation: int = 0
+
+
+class DetectiveAction:
+    def __init__(self):
+        self.player = Investigator()
+        self.location = "Neon District"
+        self.threat = 50
+        self.case_progress = 0
+
+    def investigate(self):
+        self.player.evidence += 1
+        self.case_progress += 10
+        return True
+
+    def chase(self):
+        self.threat = max(0, self.threat - 15)
+        self.case_progress += 15
+
+    def defend(self):
+        self.player.health = min(
+            100,
+            self.player.health + 5
+        )
+
+    def confront(self):
+        if self.case_progress >= 70:
+            self.player.reputation += 10
+            return True
+
+        self.player.health -= 15
+        return False
+
+    def solve(self):
+        return self.case_progress >= 100
+
+
+GAME = DetectiveAction()

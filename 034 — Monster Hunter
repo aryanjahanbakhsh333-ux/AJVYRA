@@ -1,0 +1,77 @@
+# ajvyra_game_034_monster_hunter_v2.py
+
+from dataclasses import dataclass
+
+
+@dataclass
+class Hunter:
+    name: str = "Rook"
+    hp: int = 100
+    stamina: int = 100
+    attack: int = 25
+
+
+@dataclass
+class Monster:
+    name: str
+    hp: int
+    armor: int
+    rage: int = 0
+
+
+class MonsterHunter:
+    def __init__(self):
+        self.hunter = Hunter()
+        self.monster = Monster(
+            "Gravemaw",
+            180,
+            10
+        )
+        self.trophies = []
+
+    def light_attack(self):
+        damage = max(
+            1,
+            self.hunter.attack - self.monster.armor
+        )
+
+        self.monster.hp -= damage
+        self.monster.rage += 5
+        return damage
+
+    def heavy_attack(self):
+        if self.hunter.stamina < 25:
+            return 0
+
+        self.hunter.stamina -= 25
+
+        damage = max(
+            1,
+            self.hunter.attack * 2 - self.monster.armor
+        )
+
+        self.monster.hp -= damage
+        self.monster.rage += 12
+
+        return damage
+
+    def dodge(self):
+        if self.hunter.stamina < 15:
+            return False
+
+        self.hunter.stamina -= 15
+        return True
+
+    def monster_attack(self):
+        damage = 15 + self.monster.rage // 20
+        self.hunter.hp -= damage
+
+    def collect_trophy(self):
+        if self.monster.hp <= 0:
+            self.trophies.append(self.monster.name)
+            return True
+
+        return False
+
+
+GAME = MonsterHunter()

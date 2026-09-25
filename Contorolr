@@ -1,0 +1,89 @@
+(() => {
+    "use strict";
+
+    function setupAJVYRA300Controls() {
+        const connector =
+            window.AJVYRA_300_GAMES_RUNTIME;
+
+        if (!connector) return;
+
+        document
+            .querySelectorAll(
+                "[data-ajvyra-play-game]"
+            )
+            .forEach(button => {
+                button.addEventListener(
+                    "click",
+                    async () => {
+                        const id =
+                            button.dataset
+                                .ajvyraPlayGame;
+
+                        try {
+                            await connector.play(id);
+                        } catch (error) {
+                            console.error(
+                                "AJVYRA game launch error:",
+                                error
+                            );
+                        }
+                    }
+                );
+            });
+
+        document
+            .querySelector(
+                "[data-ajvyra-next]"
+            )
+            ?.addEventListener(
+                "click",
+                () => connector.next()
+            );
+
+        document
+            .querySelector(
+                "[data-ajvyra-previous]"
+            )
+            ?.addEventListener(
+                "click",
+                () => connector.previous()
+            );
+
+        document
+            .querySelector(
+                "[data-ajvyra-restart]"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    window.AJVYRA_RUNTIME
+                        ?.restart();
+                }
+            );
+
+        document
+            .querySelector(
+                "[data-ajvyra-pause]"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    window.AJVYRA_RUNTIME
+                        ?.togglePause();
+                }
+            );
+    }
+
+    window.AJVYRA_SETUP_300_CONTROLS =
+        setupAJVYRA300Controls;
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupAJVYRA300Controls,
+            { once: true }
+        );
+    } else {
+        setupAJVYRA300Controls();
+    }
+})();

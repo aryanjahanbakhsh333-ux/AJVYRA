@@ -1,0 +1,46 @@
+.ajvyra-touch-controls {
+    position: absolute;
+    inset: auto 0 18px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 18px;
+    pointer-events: none;
+    user-select: none;
+    z-index: 20;
+}
+
+.ajvyra-touch-controls button {
+    pointer-events: auto;
+    min-width: 58px;
+    min-height: 58px;
+    margin: 5px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 18px;
+    background: rgba(10,10,10,.78);
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ajvyra-touch-controls button:active {
+    transform: scale(.94);
+    background: rgba(255,255,255,.16);
+}
+
+.ajvyra-mobile-player
+.ajvyra-touch-controls {
+    display: flex;
+}
+
+@media (hover:hover) and (pointer:fine) {
+    .ajvyra-touch-controls {
+        opacity: .35;
+    }
+
+    .ajvyra-touch-controls:hover {
+        opacity: 1;
+    }
+}

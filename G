@@ -1,0 +1,98 @@
+/* ============================================================
+   AJVYRA — EXISTING GAME LIBRARY CONNECTOR
+   ============================================================ */
+
+(function AJVYRA_AUTO_CONNECT() {
+
+    "use strict";
+
+    function findGameSource() {
+
+        const names = [
+            "AJVYRA_GAME_DEFINITIONS",
+            "AJVYRA_GAMES_DATA",
+            "AJVYRA_GAME_LIBRARY",
+            "AJVYRA_300_GAMES",
+            "AJVYRA_GAMES_LIST",
+            "AJVYRA_GAME_REGISTRY_DATA"
+        ];
+
+        for (const name of names) {
+
+            if (
+                window[name] &&
+                (
+                    Array.isArray(
+                        window[name]
+                    ) ||
+                    typeof window[name] ===
+                        "object"
+                )
+            ) {
+                return window[name];
+            }
+        }
+
+        return null;
+    }
+
+
+    const source =
+        findGameSource();
+
+
+    if (
+        source &&
+        window.AJVYRA_300
+    ) {
+
+        window.AJVYRA_300
+            .connectCollection(
+                source
+            );
+    }
+
+
+    /*
+       If the existing project exposes
+       individual games through:
+
+       window.AJVYRA_GAME_001
+       window.AJVYRA_GAME_002
+       ...
+       window.AJVYRA_GAME_300
+
+       connect them automatically.
+    */
+
+    for (
+        let i = 1;
+        i <= 300;
+        i++
+    ) {
+
+        const id =
+            `game-${String(i)
+                .padStart(3, "0")}`;
+
+        const globalName =
+            `AJVYRA_GAME_${String(i)
+                .padStart(3, "0")}`;
+
+        const definition =
+            window[globalName];
+
+        if (
+            definition &&
+            window.AJVYRA_300
+        ) {
+
+            window.AJVYRA_300
+                .connectGame(
+                    id,
+                    definition
+                );
+        }
+    }
+
+})();

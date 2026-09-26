@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta
+        name="viewport"
+        content="width=device-width,
+                 initial-scale=1,
+                 maximum-scale=1,
+                 user-scalable=no"
+    >
+    <title>AJVYRA — Games</title>
+    <link rel="stylesheet" href="/ajvyra_final_game_styles_v1.css">
+</head>
+
+<body>
+<main id="app">
+
+    <header class="topbar">
+        <div class="brand">AJVYRA</div>
+        <div id="gameTitle">Loading...</div>
+        <button id="soundButton">🔊</button>
+    </header>
+
+    <section class="game-area">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="rotateNotice">
+            <strong>Rotate your phone</strong>
+            <span>Landscape mode gives you a larger play area.</span>
+        </div>
+    </section>
+
+    <section class="controls" id="controls">
+        <button data-action="primary">ACTION</button>
+        <button data-action="secondary">DEFEND</button>
+        <button data-action="utility">UTILITY</button>
+        <button data-action="finish">FINISH</button>
+    </section>
+
+    <section class="status">
+        <div id="statusText">Starting game...</div>
+    </section>
+
+</main>
+
+<script type="module">
+import { AJVYRAFinalRenderer }
+    from "/ajvyra_final_canvas_renderer_v1.js";
+
+import { AJVYRAInputController }
+    from "/ajvyra_final_input_controller_v1.js";
+
+import { AJVYRAAudioEngine }
+    from "/ajvyra_final_audio_engine_v1.js";
+
+const params = new URLSearchParams(location.search);
+const gameId = Number(params.get("game") || 300);
+
+const canvas = document.getElementById("gameCanvas");
+const renderer = new AJVYRAFinalRenderer(canvas);
+const audio = new AJVYRAAudioEngine();
+
+let frame = null;
+let controls = {};
+
+function gameProfile(id, title) {
+    const text = `${id} ${title}`.toLowerCase();
+
+    if (/football|basketball|volleyball|tennis|boxing|wrestling|hockey|skate|arena/.test(text))
+        return { background: "arena", primary: "player" };
+
+    if (/race|rally|car|motorcycle|bike|hoverboard|driver/.test(text))
+        return { background: "road", primary: "vehicle" };
+
+    if (/horror|haunted|shadow|escape/.test(text))
+        return { background: "dark", primary: "player" };
+
+    if (/space|starship|asteroid|moon|colony/.test(text))
+        return { background: "space", primary: "ship" };
+
+    if (/dragon|wizard|fantasy|kingdom|magic|pirate/.test(text))
+        return { background: "fantasy", primary: "hero" };
+
+    if (/manager|builder|architect|factory|governor|city/.test(text))
+        return { background: "grid", primary: "city" };
+
+    return { background: "adventure", primary: "player" };
+}
+
+async function loadGame() {
+    const response = await fetch(`/api/game/${gameId}`);
+    const data = await response.json();
+
+    if (data.error) {
+        throw new Error(data.error);
+    }
+
+    frame = data.frame;
+
+    document.getElementById("gameTitle").textContent =
+        frame.title;
+
+    controls = {};
+
+    for (const item of frame.actions || []) {
+        const name = item.name.toLowerCase();
+
+        if (!controls.primary &&
+            /attack|strike|shoot|serve|explore|drive|run|move/.test(name))
+            controls.primary = item.name;
+
+        if (!controls.secondary &&
+            /defend|guard|repair|rest|recover|scan/.test(name))
+            controls.secondary = item.name;
+
+        if (!controls.utility &&
+            /upgrade|build|collect|search|refuel|recharge|sell|buy/.test(name))
+            controls.utility = item.name;
+
+        if (!controls.finish &&
+            /finish|complete|escape|win|return|land|open/.test(name))
+            controls.finish = item.name;
+    }
+
+    renderer.setFrame(
+        frame,
+        gameProfile(frame.game_id, frame.title)
+    );
+
+    renderer.start();
+    updateStatus();
+}
+
+async function execute(category) {
+    const action = controls[category];
+
+    if (!action) return;
+
+    audio.action();
+
+    const response = await fetch(
+        `/api/action/${gameId}/${encodeURIComponent(action)}`,
+        { method: "POST" }
+    );
+
+    const data = await response.json();
+
+    if (data.error) {
+        document.getElementById("statusText").textContent =
+            data.error;
+        return;
+    }
+
+    frame = data.frame;
+
+    renderer.setFrame(
+        frame,
+        gameProfile(frame.game_id, frame.title)
+    );
+
+    if (frame.completed) {
+        audio.complete();
+    }
+
+    updateStatus();
+}
+
+function updateStatus() {
+    const state = frame?.state || {};
+
+    const values = Object.entries(state)
+        .filter(([_, value]) =>
+            typeof value === "number" ||
+            typeof value === "string" ||
+            typeof value === "boolean"
+        )
+        .slice(0, 8)
+        .map(([key, value]) => `${key}: ${value}`);
+
+    document.getElementById("statusText").textContent =
+        values.join("  •  ");
+}
+
+new AJVYRAInputController({
+    action: execute
+});
+
+document.getElementById("soundButton")
+    .addEventListener("click", () => {
+        audio.init();
+        audio.beep(600);
+    });
+
+loadGame().catch(error => {
+    document.getElementById("gameTitle").textContent =
+        "Game Error";
+
+    document.getElementById("statusText").textContent =
+        error.message;
+});
+</script>
+</body>
+</html>

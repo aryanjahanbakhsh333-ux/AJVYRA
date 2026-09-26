@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+    touch-action: manipulation;
+}
+
+#app {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+}
+
+.topbar {
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #222;
+    background: #050505;
+}
+
+.brand {
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+#gameTitle {
+    flex: 1;
+    color: #bbb;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#soundButton {
+    width: 42px;
+    height: 38px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #111;
+    color: white;
+}
+
+.game-area {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 10px;
+    background: #050505;
+    border-top: 1px solid #222;
+}
+
+.controls button {
+    min-height: 52px;
+    border: 1px solid #333;
+    border-radius: 13px;
+    background: #111;
+    color: #fff;
+    font-weight: 800;
+}
+
+.controls button:active {
+    transform: scale(.96);
+    background: #222;
+}
+
+.status {
+    min-height: 38px;
+    padding: 8px 12px;
+    color: #aaa;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-top: 1px solid #161616;
+}
+
+#rotateNotice {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    background: #000;
+    padding: 30px;
+}
+
+#rotateNotice strong {
+    font-size: 24px;
+}
+
+#rotateNotice span {
+    color: #999;
+}
+
+@media (orientation: portrait) and (max-width: 700px) {
+    #rotateNotice {
+        display: flex;
+    }
+}
+
+@media (min-width: 900px) {
+    .controls {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+}

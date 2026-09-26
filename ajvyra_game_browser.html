@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width,
+                 initial-scale=1,
+                 maximum-scale=1,
+                 user-scalable=no"
+    >
+
+    <title>AJVYRA Games</title>
+
+    <link
+        rel="stylesheet"
+        href="ajvyra_game_browser_v1.css"
+    >
+</head>
+
+<body>
+
+<div id="app">
+
+    <header id="topbar">
+        <div class="brand">AJVYRA</div>
+
+        <button id="backButton">
+            GAMES
+        </button>
+
+        <div id="gameTitle">
+            SELECT A GAME
+        </div>
+    </header>
+
+    <main id="main">
+
+        <section id="catalogScreen">
+            <div class="hero">
+                <h1>AJVYRA</h1>
+                <p>300 MOBILE GAMES</p>
+            </div>
+
+            <div id="gameGrid"></div>
+        </section>
+
+        <section
+            id="gameScreen"
+            class="hidden"
+        >
+
+            <canvas id="gameCanvas"></canvas>
+
+            <div id="touchControls">
+
+                <div class="dpad">
+                    <button data-action="up">▲</button>
+
+                    <div>
+                        <button data-action="left">◀</button>
+                        <button data-action="down">▼</button>
+                        <button data-action="right">▶</button>
+                    </div>
+                </div>
+
+                <div class="actionPad">
+                    <button data-action="secondary">B</button>
+                    <button data-action="primary">A</button>
+                </div>
+
+            </div>
+
+            <div id="gameStatus"></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="ajvyra_game_browser_v1.js"></script>
+
+</body>
+</html>
